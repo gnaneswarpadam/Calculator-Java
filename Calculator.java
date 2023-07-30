@@ -11,6 +11,7 @@ public class Calculator implements ActionListener{
     JButton bEqual;
     JButton bDot,bC;
     JLabel display;
+    String calc = "";
     Calculator(){
         frame = new JFrame("Calculator");
         JPanel panel = new JPanel(null);
@@ -94,7 +95,7 @@ public class Calculator implements ActionListener{
         bC.addActionListener(this);
         bEqual.addActionListener(this);
         
-        
+
         panel.add(digit1);
         panel.add(digit2);
         panel.add(digit3);
@@ -124,7 +125,7 @@ public class Calculator implements ActionListener{
     }
     public void actionPerformed(ActionEvent e){
         Object ob = e.getSource();
-        String s = "";
+        
         if(!ob.equals(bEqual)){
             s = s + e.getActionCommand().toString();
             display.setText(s);
