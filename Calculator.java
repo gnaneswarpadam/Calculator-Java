@@ -2,6 +2,7 @@
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
+import java.util.*;
 
 public class Calculator implements ActionListener{
 
@@ -11,8 +12,10 @@ public class Calculator implements ActionListener{
     JButton bEqual;
     JButton bDot,bC;
     JLabel display;
-    String calc = "";
+    String s = "";
+
     Calculator(){
+
         frame = new JFrame("Calculator");
         JPanel panel = new JPanel(null);
         panel.setBounds(0, 200, 400, 500);
@@ -123,14 +126,74 @@ public class Calculator implements ActionListener{
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
     }
+
     public void actionPerformed(ActionEvent e){
         Object ob = e.getSource();
         
-        if(!ob.equals(bEqual)){
+        if(!ob.equals(bEqual) && !ob.equals(bC)){
             s = s + e.getActionCommand().toString();
             display.setText(s);
         }
+        else if(ob.equals(bC)){
+            s = "";
+            display.setText(s);
+        }
+        else{
+            display.setText(calculation(s));
+        }
+    }
+
+    public static String calculation(String a){
+        ArrayList<String> num = new ArrayList<>();
+        ArrayList<Character> op = new ArrayList<>();
+        boolean bd = (a.contains(".")) ? true : false ;
+        Float result = 0f;
+        String temp = "";
+        for(int i=0;i<a.length();i++){
+            char ch = a.charAt(i);
+            if(ch=='+' || ch=='-' || ch=='*' ||ch=='/'){
+                num.add(temp);
+                temp = "";
+                op.add(ch);
+            }
+            else{
+                temp += ch;
+            }
+        }
+        num.add(temp);
+
+        for(int i=0;i<op.size();i++){
+            char ch = op.get(i);
+            if(ch=='*'){
+                Float p = Float.parseFloat(num.remove(i)) * Float.parseFloat(num.remove(i));
+                num.add(i, p.toString());
+                op.remove(i);
+                i--;
+            }
+            else if(ch=='/'){
+                Float p = Float.parseFloat(num.remove(i)) / Float.parseFloat(num.remove(i));
+                num.add(i, p.toString());
+                op.remove(i);
+                i--;
+            }
+        }
+
+        result = Float.parseFloat(num.get(0));
+        for(int i=0;i<op.size();i++){
+            char ch = op.get(i);
+            if(ch=='+'){
+                result += Float.parseFloat(num.get(i+1));
+            }
+            else if(ch=='-'){
+                result -= Float.parseFloat(num.get(i+1));
+            }
+        }
         
+        if(!bd){
+            String t = result.toString();
+            return t.substring(0,t.length()-2);
+        }
+        return result.toString();
     }
     
 
